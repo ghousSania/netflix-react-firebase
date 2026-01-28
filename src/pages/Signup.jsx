@@ -4,6 +4,7 @@ import { authStart, authFail, clearAuthError } from "../store/authSlice";
 import { auth } from "../services/firebase";
 import { Navigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuthErrorMessage } from "../utils/firebaseErrorMapper";
 const Signup = () => {
   const dispatch = useDispatch();
 
@@ -28,7 +29,7 @@ const Signup = () => {
       // success handled by auth Listener
     } catch (error) {
       setSubmitting(false);
-      dispatch(authFail(error.message));
+      dispatch(authFail(error.code));
     }
   };
 
@@ -79,7 +80,7 @@ const Signup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {authError && <p>{authError} </p>}
+        {authError && <p>{getAuthErrorMessage(authError)} </p>}
         <button disabled={submitting}>
           {submitting ? "Signing up..." : "Signup"}
         </button>

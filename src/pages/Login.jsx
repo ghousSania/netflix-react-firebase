@@ -4,6 +4,7 @@ import { authStart, authFail, clearAuthError } from "../store/authSlice";
 import { auth } from "../services/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Navigate, Link } from "react-router-dom";
+import { getAuthErrorMessage } from "../utils/firebaseErrorMapper";
 const Login = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, authError } = useSelector((state) => state.auth);
@@ -24,7 +25,7 @@ const Login = () => {
       // Success state will be handled by onAuthStateChanged listener
     } catch (error) {
       setSubmitting(false);
-      dispatch(authFail(error.message));
+      dispatch(authFail(error.code));
     }
   };
 
@@ -63,7 +64,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {authError && <p>{authError} </p>}
+        {authError && <p>{getAuthErrorMessage(authError)} </p>}
         <button disabled={submitting}>
           {submitting ? "Logging in..." : "Login"}
         </button>
