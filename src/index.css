@@ -1,1 +1,35 @@
 @import "tailwindcss";
+/* default: dark */
+:root {
+  --bg: #0e172a;
+  --primary: #2a6aee;
+  --text-muted: #94a3b8;
+  --text-primary: #ffffff;
+
+  /* input*/
+  --input-bg: #1e293b;
+  --input-border: #2e3f5a;
+  --input-border-focus: #2a6aee;
+  --input-placeholder: #64748b;
+
+  --error-bg: #2b394e;
+}
+
+/* light override */
+.light {
+  --bg: #ffffff;
+  --primary: #2a6aee;
+  --text-muted: #586476;
+  --text-primary: #000000;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}

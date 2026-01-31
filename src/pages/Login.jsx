@@ -5,6 +5,12 @@ import { auth } from "../services/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Navigate, Link } from "react-router-dom";
 import { getAuthErrorMessage } from "../utils/firebaseErrorMapper";
+import AuthLayout from "../components/auth/AuthLayout";
+import AuthForm from "../components/auth/AuthForm";
+import AuthInput from "../components/auth/AuthInput";
+import Button from "../components/Button";
+import FieldError from "../components/auth/FieldError";
+import FormError from "../components/auth/FormError";
 const Login = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, authError } = useSelector((state) => state.auth);
@@ -33,46 +39,53 @@ const Login = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <div>
-      <h2 className="text-2xl font-bold underline">Welcome Back</h2>
-      <p>Enter your email and password to sign in.</p>
-      <form onSubmit={handleLogin}>
+    <AuthLayout
+      title="Welcome Back"
+      subTitle="Enter your email and password to sign in."
+    >
+      <AuthForm onSubmit={handleLogin}>
         {/* Email */}
-        <div>
-          <label htmlFor="email">Email Address</label>
-          <input
+        <div className="mb-4">
+          <AuthInput
+            label="Email Address"
             type="email"
             id="email"
-            name="email"
+            name="name"
             value={email}
-            required
+            required="true"
+            placeholder="Enter email address"
             onChange={(e) => setEmail(e.target.value)}
           />
+          {/* <FieldError message="Email is required" /> */}
         </div>
+
         {/* Password */}
-        <div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <a href="">Forget Password?</a>
-          </div>
-          <input
+        <div className="mb-4">
+          <AuthInput
+            label="Password"
             type="password"
             id="password"
             name="password"
-            required
             value={password}
+            required="true"
+            placeholder="Enter password"
             onChange={(e) => setPassword(e.target.value)}
           />
+          {/* <FieldError message="Password is required" /> */}
         </div>
-        {authError && <p>{getAuthErrorMessage(authError)} </p>}
-        <button disabled={submitting}>
-          {submitting ? "Logging in..." : "Login"}
-        </button>
-      </form>
-      <p>
-        New Here? <Link to="/signup">Create an account</Link>
+
+        {authError && <FormError message={getAuthErrorMessage(authError)} />}
+        <Button type="submit" fullWidth loading={submitting} className="mt-2">
+          Login
+        </Button>
+      </AuthForm>
+      <p className="text-(--text-muted) text-center mt-4">
+        New Here?{" "}
+        <Link to="/signup" className="text-(--text-primary)">
+          Create an account
+        </Link>
       </p>
-    </div>
+    </AuthLayout>
   );
 };
 

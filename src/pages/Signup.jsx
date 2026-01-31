@@ -5,6 +5,12 @@ import { auth } from "../services/firebase";
 import { Navigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getAuthErrorMessage } from "../utils/firebaseErrorMapper";
+import AuthLayout from "../components/auth/AuthLayout";
+import AuthForm from "../components/auth/AuthForm";
+import AuthInput from "../components/auth/AuthInput";
+import Button from "../components/Button";
+import FieldError from "../components/auth/FieldError";
+import FormError from "../components/auth/FormError";
 const Signup = () => {
   const dispatch = useDispatch();
 
@@ -37,58 +43,65 @@ const Signup = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <div>
-      <h2>Create an account</h2>
-      <p>Create an account and start watching today.</p>
-      <form onSubmit={handleSignup}>
-        {/* Nama */}
-        <div>
-          <label htmlFor="name">Full Name</label>
-          <input
+    <AuthLayout
+      title="Create an account"
+      subTitle="Create an account and start watching today."
+    >
+      <AuthForm onSubmit={handleSignup}>
+        {/* Name */}
+        <div className="mb-4">
+          <AuthInput
+            label="Full Name"
             type="text"
             id="name"
             name="name"
             value={name}
-            required
+            required="true"
+            placeholder="Enter your name"
             onChange={(e) => setName(e.target.value)}
+            className="capitalize"
           />
         </div>
+
         {/* Email */}
-        <div>
-          <label htmlFor="email">Email Address</label>
-          <input
+        <div className="mb-4">
+          <AuthInput
+            label="Email Address"
             type="email"
             id="email"
             name="email"
             value={email}
-            required
+            required="true"
+            placeholder="Enter your email"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+
         {/* Password */}
-        <div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <a href="">Forget Password?</a>
-          </div>
-          <input
+        <div className="mb-4">
+          <AuthInput
+            label="Password"
             type="password"
             id="password"
             name="password"
-            required
             value={password}
+            required="true"
+            placeholder="Enter password"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {authError && <p>{getAuthErrorMessage(authError)} </p>}
-        <button disabled={submitting}>
-          {submitting ? "Signing up..." : "Signup"}
-        </button>
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Sign in instead</Link>
+        {authError && <FormError message={getAuthErrorMessage(authError)} />}
+        <Button type="submit" fullWidth loading={submitting} className="mt-2">
+          Signup
+        </Button>
+      </AuthForm>
+      <p className="text-(--text-muted) text-center mt-4">
+        Already have an account?{" "}
+        <Link to="/login" className="text-(--text-primary)">
+          Log in
+        </Link>
       </p>
-    </div>
+    </AuthLayout>
   );
 };
 
