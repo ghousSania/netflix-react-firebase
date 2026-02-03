@@ -11,19 +11,20 @@ const Button = ({
   className = "",
 }) => {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium transition focus: outline-none  ";
+    "inline-flex items-center justify-center gap-2 rounded-md  py-2 cursor-pointer font-medium transition focus: outline-none  ";
 
   const width = fullWidth ? "w-full" : "";
 
   const isDisabled = disabled || loading;
   const variants = {
     primary: `
+            px-4
             bg-(--primary)
             text-white
-            cursor-pointer
             hover:bg-(--primary)/90
             active:bg-(--primary)/80
             `,
+    link: `px-1 text-(--link)`,
   };
   const disablesStyles = "opacity-60 cursor-not-allowed pointer-events-none";
 

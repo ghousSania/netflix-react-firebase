@@ -1,5 +1,6 @@
 const AuthInput = ({
   label,
+  rightElement,
   type = "text",
   id,
   name,
@@ -11,9 +12,13 @@ const AuthInput = ({
 }) => {
   return (
     <div>
-      <label className="text-slate-300 font-medium" htmlFor={id}>
-        {label}
-      </label>
+      <div className="flex justify-between items-center">
+        <label className="text-slate-300 font-medium" htmlFor={id}>
+          {label}
+        </label>
+        {rightElement}
+      </div>
+
       <input
         type={type}
         id={id}

@@ -11,6 +11,8 @@ import MovieDetails from "./pages/MovieDetails";
 import SearchResults from "./pages/SearchResults";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import NotFound from "./pages/NotFound";
+import ForgotPassword from "./pages/ForgotPassword";
+
 function App() {
   const dispatch = useDispatch();
 
@@ -37,6 +39,7 @@ function App() {
         {/* public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* protected routes  */}
         <Route element={<ProtectedRoute />}>

@@ -83,6 +83,11 @@ const Login = () => {
         <div className="mb-4">
           <AuthInput
             label="Password"
+            rightElement={
+              <Link to="/forgot-password" className="text-sm text-(--link)">
+                Forgot password?
+              </Link>
+            }
             type="password"
             id="password"
             name="password"
