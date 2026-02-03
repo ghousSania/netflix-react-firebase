@@ -6,12 +6,12 @@ const FormError = ({ message }) => {
         className="mt-0.5 h-5 w-5 shrink-0 text-red-400"
         fill="none"
         stroke="currentColor"
-        stroke-width="2"
+        strokeWidth="2"
         viewBox="0 0 24 24"
       >
         <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>

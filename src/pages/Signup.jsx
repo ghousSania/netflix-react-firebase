@@ -11,6 +11,7 @@ import AuthInput from "../components/auth/AuthInput";
 import Button from "../components/Button";
 import FieldError from "../components/auth/FieldError";
 import FormError from "../components/auth/FormError";
+import { validateAuthForm } from "../utils/validateAuthForm";
 const Signup = () => {
   const dispatch = useDispatch();
 
@@ -23,11 +24,23 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+
+    const validationErrors = validateAuthForm(
+      { name, email, password, confirmPassword },
+      "signup",
+    );
+    if (Object.keys(validationErrors).length > 0) {
+      setSubmitting(false);
+      setErrors(validationErrors);
+      return;
+    }
     dispatch(authStart());
 
     try {
@@ -38,7 +51,13 @@ const Signup = () => {
       dispatch(authFail(error.code));
     }
   };
-
+  const clearFieldError = (field) => {
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const { [field]: _, ...rest } = prev;
+      return rest;
+    });
+  };
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
@@ -56,11 +75,15 @@ const Signup = () => {
             id="name"
             name="name"
             value={name}
-            required="true"
+            required={true}
             placeholder="Enter your name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              clearFieldError("fullname");
+            }}
             className="capitalize"
           />
+          {errors.fullname && <FieldError message={errors.fullname} />}
         </div>
 
         {/* Email */}
@@ -71,10 +94,13 @@ const Signup = () => {
             id="email"
             name="email"
             value={email}
-            required="true"
+            required={true}
             placeholder="Enter your email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              (setEmail(e.target.value), clearFieldError("email"));
+            }}
           />
+          {errors.email && <FieldError message={errors.email} />}
         </div>
 
         {/* Password */}
@@ -85,10 +111,33 @@ const Signup = () => {
             id="password"
             name="password"
             value={password}
-            required="true"
+            required={true}
             placeholder="Enter password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              (setPassword(e.target.value), clearFieldError("password"));
+            }}
           />
+          {errors.password && <FieldError message={errors.password} />}
+        </div>
+
+        {/* Confirm Password */}
+        <div className="mb-4">
+          <AuthInput
+            label="Confirm Password"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={confirmPassword}
+            required={true}
+            placeholder="Confirm password"
+            onChange={(e) => {
+              (setConfirmPassword(e.target.value),
+                clearFieldError("confirmPassword"));
+            }}
+          />
+          {errors.confirmPassword && (
+            <FieldError message={errors.confirmPassword} />
+          )}
         </div>
         {authError && <FormError message={getAuthErrorMessage(authError)} />}
         <Button type="submit" fullWidth loading={submitting} className="mt-2">

@@ -11,6 +11,7 @@ import AuthInput from "../components/auth/AuthInput";
 import Button from "../components/Button";
 import FieldError from "../components/auth/FieldError";
 import FormError from "../components/auth/FormError";
+import { validateAuthForm } from "../utils/validateAuthForm";
 const Login = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, authError } = useSelector((state) => state.auth);
@@ -18,12 +19,21 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   useEffect(() => {
     dispatch(clearAuthError());
   }, [dispatch]);
   const handleLogin = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+
+    const validationErrors = validateAuthForm({ email, password }, "login");
+    if (Object.keys(validationErrors).length > 0) {
+      setSubmitting(false);
+      setErrors(validationErrors);
+
+      return;
+    }
     dispatch(authStart());
 
     try {
@@ -33,6 +43,14 @@ const Login = () => {
       setSubmitting(false);
       dispatch(authFail(error.code));
     }
+  };
+
+  const clearFieldError = (field) => {
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const { [field]: _, ...rest } = prev;
+      return rest;
+    });
   };
 
   if (isAuthenticated) {
@@ -50,13 +68,15 @@ const Login = () => {
             label="Email Address"
             type="email"
             id="email"
-            name="name"
+            name="email"
             value={email}
-            required="true"
+            required={true}
             placeholder="Enter email address"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              (setEmail(e.target.value), clearFieldError("email"));
+            }}
           />
-          {/* <FieldError message="Email is required" /> */}
+          {errors.email && <FieldError message={errors.email} />}
         </div>
 
         {/* Password */}
@@ -67,11 +87,14 @@ const Login = () => {
             id="password"
             name="password"
             value={password}
-            required="true"
+            required={true}
             placeholder="Enter password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              clearFieldError("password");
+            }}
           />
-          {/* <FieldError message="Password is required" /> */}
+          {errors.password && <FieldError message={errors.password} />}
         </div>
 
         {authError && <FormError message={getAuthErrorMessage(authError)} />}
