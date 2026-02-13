@@ -4,7 +4,12 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "../store/authSlice";
 import { signOut } from "firebase/auth";
 import { auth } from "../services/firebase";
-import { fetchPopularMovies } from "../services/tmdb";
+import {
+  getPopularMovies,
+  getUpcomingMovies,
+  getTopRatedMovies,
+  getNowPlayingMovies,
+} from "../store/moviesSlice";
 const Home = () => {
   const dispatch = useDispatch();
   const handleLogout = async () => {
@@ -17,8 +22,11 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchPopularMovies().then((data) => console.log(data));
-  }, []);
+    dispatch(getPopularMovies());
+    dispatch(getTopRatedMovies());
+    dispatch(getUpcomingMovies());
+    dispatch(getNowPlayingMovies());
+  }, [dispatch]);
   return (
     <>
       <h1>Home Page</h1>
