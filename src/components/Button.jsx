@@ -18,13 +18,22 @@ const Button = ({
   const isDisabled = disabled || loading;
   const variants = {
     primary: `
-            px-4
+            px-2 sm:px-4
+            text-sm sm:text-base
             bg-(--primary)
             text-white
             hover:bg-(--primary)/90
             active:bg-(--primary)/80
             `,
     link: `px-1 text-(--link)`,
+    light: `
+             px-2 sm:px-4
+            text-sm sm:text-base
+            bg-white/20
+            text-white
+            hover:bg-white/30
+            backdrop-blur
+    `,
   };
   const disablesStyles = "opacity-60 cursor-not-allowed pointer-events-none";
 

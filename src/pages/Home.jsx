@@ -9,6 +9,7 @@ import {
 } from "../store/moviesSlice";
 import MovieRow from "../components/MovieRow";
 import Container from "../components/container";
+import Hero from "../components/hero";
 const Home = () => {
   const dispatch = useDispatch();
 
@@ -22,6 +23,8 @@ const Home = () => {
   const handleMovieClick = (movie) => {
     console.log(movie);
   };
+
+  const featuredMovie = moviesByCategory.popular?.[0] || null;
   useEffect(() => {
     dispatch(getPopularMovies());
     dispatch(getTopRatedMovies());
@@ -34,6 +37,7 @@ const Home = () => {
   if (error) return <div>{error}</div>;
   return (
     <>
+      <Hero movie={featuredMovie} />
       <Container>
         <div>
           {categories.map((cat) => (

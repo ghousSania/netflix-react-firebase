@@ -1,3 +1,4 @@
+import { TMDB_IMAGE_BASE_URL } from "../utils/constants";
 const MovieCard = ({ movie, onClick }) => {
   return (
     <div
@@ -5,7 +6,7 @@ const MovieCard = ({ movie, onClick }) => {
       className="w-40 shrink-0 cursor-pointer hover:scale-105 transition"
     >
       <img
-        src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+        src={`${TMDB_IMAGE_BASE_URL}w500/${movie.poster_path}`}
         alt={movie.title}
         className="rounded-lg"
       />
