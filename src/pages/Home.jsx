@@ -1,9 +1,5 @@
-import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../store/authSlice";
-import { signOut } from "firebase/auth";
-import { auth } from "../services/firebase";
 
 import {
   getPopularMovies,
@@ -11,8 +7,8 @@ import {
   getTopRatedMovies,
   getNowPlayingMovies,
 } from "../store/moviesSlice";
-import MovieCard from "../components/MovieCard";
 import MovieRow from "../components/MovieRow";
+import Container from "../components/container";
 const Home = () => {
   const dispatch = useDispatch();
 
@@ -22,14 +18,7 @@ const Home = () => {
   );
   const loading = useSelector((state) => state.movies.moviesLoading);
   const error = useSelector((state) => state.movies.moviesError);
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      dispatch(clearUser());
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+
   const handleMovieClick = (movie) => {
     console.log(movie);
   };
@@ -45,21 +34,18 @@ const Home = () => {
   if (error) return <div>{error}</div>;
   return (
     <>
-      <h1 className="text-(--text-primary)">Home Page</h1>
-      <button className="text-(--text-primary)" onClick={handleLogout}>
-        Logout
-      </button>
-
-      <div className="p-6">
-        {categories.map((cat) => (
-          <MovieRow
-            key={cat.key}
-            title={cat.label}
-            movies={moviesByCategory[cat.key]}
-            onMovieClick={handleMovieClick}
-          />
-        ))}
-      </div>
+      <Container>
+        <div>
+          {categories.map((cat) => (
+            <MovieRow
+              key={cat.key}
+              title={cat.label}
+              movies={moviesByCategory[cat.key]}
+              onMovieClick={handleMovieClick}
+            />
+          ))}
+        </div>
+      </Container>
     </>
   );
 };

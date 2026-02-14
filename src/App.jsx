@@ -12,6 +12,7 @@ import SearchResults from "./pages/SearchResults";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
+import MainLayout from "./components/MainLayout";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function App() {
           setUser({
             uid: user.uid,
             email: user.email,
+            name: user.displayName,
           }),
         );
       } else {
@@ -43,9 +45,11 @@ function App() {
 
         {/* protected routes  */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/movie/:id" element={<MovieDetails />} />
-          <Route path="/search" element={<SearchResults />} />
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/search" element={<SearchResults />} />
+          </Route>
         </Route>
 
         {/* Not found route */}

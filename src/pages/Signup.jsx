@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authStart, authFail, clearAuthError } from "../store/authSlice";
 import { auth } from "../services/firebase";
 import { Navigate, Link } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { getAuthErrorMessage } from "../utils/firebaseErrorMapper";
 import AuthLayout from "../components/auth/AuthLayout";
 import AuthForm from "../components/auth/AuthForm";
@@ -44,8 +44,15 @@ const Signup = () => {
     dispatch(authStart());
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       // success handled by auth Listener
+      await updateProfile(userCredential.user, {
+        displayName: name,
+      });
     } catch (error) {
       setSubmitting(false);
       dispatch(authFail(error.code));
