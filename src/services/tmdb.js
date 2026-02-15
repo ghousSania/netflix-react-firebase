@@ -45,3 +45,15 @@ export const fetchMovieCredits = async (movieId) => {
   );
   return response.json();
 };
+
+export const fetchMovieTrailer = async (id) => {
+  const res = await fetch(`${BASE_URL}/movie/${id}/videos?api_key=${API_KEY}`);
+  const data = await res.json();
+
+  //  YouTube trailer
+  const trailer = data.results.find(
+    (vid) => vid.type === "Trailer" && vid.site === "YouTube",
+  );
+
+  return trailer ? trailer.key : null;
+};

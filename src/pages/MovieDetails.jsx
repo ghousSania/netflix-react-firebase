@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchMovieDetails, fetchMovieCredits } from "../services/tmdb";
+import {
+  fetchMovieDetails,
+  fetchMovieCredits,
+  fetchMovieTrailer,
+} from "../services/tmdb";
 import { TMDB_IMAGE_BASE_URL } from "../utils/constants";
 import Container from "../components/container";
 import InfoItem from "../components/InfoItem";
@@ -8,13 +12,35 @@ import CastCard from "../components/CastCard";
 import { FaStar } from "react-icons/fa";
 import Button from "../components/Button";
 import HorizontalScroller from "../components/HorizontalScroller";
+import TrailerModal from "../components/TrailerModal";
+
 const MovieDetails = () => {
   const { id } = useParams();
-
+  // State variables
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
+  const [showTrailer, setShowTrailer] = useState(false);
+  const [trailerKey, setTrailerKey] = useState(null);
+  const [trailerLoading, setTrailerLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch trailer key when user clicks "Watch Trailer"
+  const handleWatchTrailer = async () => {
+    setShowTrailer(true);
+
+    if (!trailerKey) {
+      try {
+        setTrailerLoading(true);
+        const key = await fetchMovieTrailer(id);
+        setTrailerKey(key);
+      } catch {
+        setTrailerKey(null);
+      } finally {
+        setTrailerLoading(false);
+      }
+    }
+  };
+  // Fetch movie details and credits on component mount
   useEffect(() => {
     const getData = async () => {
       try {
@@ -113,7 +139,13 @@ const MovieDetails = () => {
           </div>
 
           {/* Trailer Button */}
-          <Button className=" px-6 py-3 font-semibold">Watch Trailer</Button>
+          <Button
+            className=" px-6 py-3 font-semibold"
+            onClick={handleWatchTrailer}
+            loading={trailerLoading}
+          >
+            Watch Trailer
+          </Button>
 
           {/* Overview */}
           <div>
@@ -150,6 +182,13 @@ const MovieDetails = () => {
           </div>
         </div>
       </div>
+      {/* Trailer Modal */}
+      <TrailerModal
+        isOpen={showTrailer}
+        onClose={() => setShowTrailer(false)}
+        trailerKey={trailerKey}
+        loading={trailerLoading}
+      />
     </Container>
   );
 };
