@@ -24,3 +24,24 @@ export const fetchNowPlayingMovies = async () => {
   );
   return response.json();
 };
+
+export const fetchMovieDetails = async (movieId) => {
+  const response = await fetch(
+    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`,
+  );
+  return response.json();
+};
+
+export const fetchMovieVideos = async (movieId) => {
+  const response = await fetch(
+    `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`,
+  );
+  return response.json();
+};
+
+export const fetchMovieCredits = async (movieId) => {
+  const response = await fetch(
+    `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`,
+  );
+  return response.json();
+};

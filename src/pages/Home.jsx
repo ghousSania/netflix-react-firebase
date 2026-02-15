@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 import {
   getPopularMovies,
   getUpcomingMovies,
@@ -12,7 +12,7 @@ import Container from "../components/container";
 import Hero from "../components/hero";
 const Home = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const categories = useSelector((state) => state.movies.movieCategorires);
   const moviesByCategory = useSelector(
     (state) => state.movies.moviesByCategory,
@@ -21,7 +21,7 @@ const Home = () => {
   const error = useSelector((state) => state.movies.moviesError);
 
   const handleMovieClick = (movie) => {
-    console.log(movie);
+    navigate(`/movie/${movie.id}`);
   };
 
   const featuredMovie = moviesByCategory.popular?.[0] || null;

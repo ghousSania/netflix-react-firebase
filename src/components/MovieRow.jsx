@@ -1,4 +1,5 @@
 import MovieCard from "./MovieCard";
+import HorizontalScroller from "./HorizontalScroller";
 
 const MovieRow = ({ title, movies, onMovieClick }) => {
   return (
@@ -7,7 +8,7 @@ const MovieRow = ({ title, movies, onMovieClick }) => {
         {title}
       </h2>
 
-      <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+      <HorizontalScroller>
         {movies?.map((movie) => (
           <MovieCard
             key={movie.id}
@@ -15,7 +16,7 @@ const MovieRow = ({ title, movies, onMovieClick }) => {
             onClick={() => onMovieClick(movie)}
           />
         ))}
-      </div>
+      </HorizontalScroller>
     </div>
   );
 };
