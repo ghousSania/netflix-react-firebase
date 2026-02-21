@@ -3,7 +3,7 @@ const MovieCard = ({ movie, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="w-40 snap-item shrink-0 cursor-pointer hover:scale-105 transition"
+      className="w-full mx-auto mt-5 snap-item shrink-0 cursor-pointer hover:scale-105 transition"
     >
       <img
         src={`${TMDB_IMAGE_BASE_URL}w500/${movie.poster_path}`}

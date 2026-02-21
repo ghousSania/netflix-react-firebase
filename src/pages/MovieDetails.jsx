@@ -72,7 +72,7 @@ const MovieDetails = () => {
               movie.backdrop_path || movie.poster_path
             }`}
             alt={movie.title}
-            className="w-full rounded-lg shadow-lg object-cover max-h-105 md:max-h-none"
+            className="w-full rounded-lg shadow-lg object-cover max-h-60 md:max-h-67.5"
           />
 
           {/* Info Box */}

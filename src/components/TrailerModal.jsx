@@ -59,7 +59,7 @@ const TrailerModal = ({ isOpen, onClose, trailerKey, loading }) => {
         ) : trailerKey ? (
           <iframe
             className="w-full h-full"
-            src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+            src={`https://www.youtube.com/embed/${trailerKey}`}
             title="Trailer"
             allow="autoplay; encrypted-media"
             allowFullScreen

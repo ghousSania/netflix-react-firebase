@@ -8,11 +8,11 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import MovieDetails from "./pages/MovieDetails";
-import SearchResults from "./pages/SearchResults";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import MainLayout from "./components/MainLayout";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
-            <Route path="/search" element={<SearchResults />} />
+            <Route path="/search" element={<SearchPage />} />
           </Route>
         </Route>
 

@@ -1,59 +1,56 @@
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 
-export const fetchPopularMovies = async () => {
-  const response = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
-  return response.json();
-};
+export async function request(endpoint, params = {}) {
+  const url = new URL(`${BASE_URL}${endpoint}`);
 
-export const fetchUpcomingMovies = async () => {
-  const response = await fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`);
-  return response.json();
-};
+  url.searchParams.set("api_key", API_KEY);
+  url.searchParams.set("language", "en-US");
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      url.searchParams.set(key, value);
+    }
+  });
 
-export const fetchTopRatedMovies = async () => {
-  const response = await fetch(
-    `${BASE_URL}/movie/top_rated?api_key=${API_KEY}`,
-  );
-  return response.json();
-};
+  const response = await fetch(url);
 
-export const fetchNowPlayingMovies = async () => {
-  const response = await fetch(
-    `${BASE_URL}/movie/now_playing?api_key=${API_KEY}`,
-  );
-  return response.json();
-};
+  if (!response.ok) {
+    throw new Error(`TMDB request failed: ${response.status}`);
+  }
 
-export const fetchMovieDetails = async (movieId) => {
-  const response = await fetch(
-    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`,
-  );
   return response.json();
-};
+}
 
-export const fetchMovieVideos = async (movieId) => {
-  const response = await fetch(
-    `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`,
-  );
-  return response.json();
-};
+/* ---------------- MOVIE LISTS ---------------- */
 
-export const fetchMovieCredits = async (movieId) => {
-  const response = await fetch(
-    `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`,
-  );
-  return response.json();
-};
+export const fetchPopularMovies = () => request("/movie/popular");
+
+export const fetchUpcomingMovies = () => request("/movie/upcoming");
+
+export const fetchTopRatedMovies = () => request("/movie/top_rated");
+
+export const fetchNowPlayingMovies = () => request("/movie/now_playing");
+
+/* ---------------- MOVIE DETAILS ---------------- */
+
+export const fetchMovieDetails = (movieId) => request(`/movie/${movieId}`);
+
+export const fetchMovieCredits = (movieId) =>
+  request(`/movie/${movieId}/credits`);
+
+/* ---------------- TRAILER ---------------- */
 
 export const fetchMovieTrailer = async (id) => {
-  const res = await fetch(`${BASE_URL}/movie/${id}/videos?api_key=${API_KEY}`);
-  const data = await res.json();
+  const data = await request(`/movie/${id}/videos`);
 
-  //  YouTube trailer
-  const trailer = data.results.find(
+  const trailer = data.results?.find(
     (vid) => vid.type === "Trailer" && vid.site === "YouTube",
   );
 
   return trailer ? trailer.key : null;
 };
+
+/* ---------------- SEARCH ---------------- */
+
+export const searchMoviesByTitle = (query) =>
+  request("/search/movie", { query });

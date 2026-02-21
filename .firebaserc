@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "netflix-react-firebase-2c7de"
-  }
+    "default": "netflix-react-firebase-98266"
+  },
+  "targets": {},
+  "etags": {}
 }
