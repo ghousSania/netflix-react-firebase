@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { searchMovies } from "../services/searchService";
 
-export function useMovieSearch(query) {
+export function useMovieSearch(query, searchTrigger) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -43,7 +43,7 @@ export function useMovieSearch(query) {
     return () => {
       isCancelled = true;
     };
-  }, [query]);
+  }, [query, searchTrigger]);
 
   return { results, loading, error };
 }

@@ -4,11 +4,13 @@ import Container from "../components/container";
 import { useNavigate, useLocation } from "react-router-dom";
 import SearchSuggestions from "../components/SearchSuggestions";
 import { useMovieSearch } from "../utils/useMovieSearch";
+import MovieCardSkeleton from "../components/MovieCardSkeleton";
 
 const SearchPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [inputValue, setInputValue] = useState("");
+  const [searchTrigger, setSearchTrigger] = useState(0);
 
   /* Extract query from URL. */
   const query = useMemo(() => {
@@ -16,7 +18,7 @@ const SearchPage = () => {
     return params.get("query")?.trim() || "";
   }, [location.search]);
 
-  const { results, loading } = useMovieSearch(query);
+  const { results, loading, error } = useMovieSearch(query, searchTrigger);
 
   const hasSearched = Boolean(query);
 
@@ -29,7 +31,12 @@ const SearchPage = () => {
   const handleSearch = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
-    navigate(`/search?query=${encodeURIComponent(trimmed)}`);
+    if (trimmed === query) {
+      // Same query , force re-search
+      setSearchTrigger((prev) => prev + 1);
+    } else {
+      navigate(`/search?query=${encodeURIComponent(trimmed)}`);
+    }
   };
   /* Navigate to movie details page */
   const handleMovieClick = (id) => {
@@ -37,7 +44,7 @@ const SearchPage = () => {
   };
   return (
     <Container>
-      <div className="min-h-screen px-4 py-12 mx-auto text-(--text-primary)">
+      <div className="min-h-screen px-4 py-10 mx-auto text-(--text-primary)">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8">
           What's your story today?
         </h1>
@@ -86,10 +93,21 @@ const SearchPage = () => {
 
         <SearchSuggestions />
         {loading && (
-          <p className="text-center mt-6 text-(--text-muted)">Searching...</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mt-3">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <MovieCardSkeleton key={index} />
+            ))}
+          </div>
         )}
+        {!loading && error && (
+          <p className="text-red-400 text-center mt-8 ">
+            Something went wrong. Please check your internet connection and try
+            again.
+          </p>
+        )}
+
         {/* Results Grid */}
-        {!loading && results.length > 0 && (
+        {!loading && !error && results.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mt-3">
             {results.map((movie) => (
               <MovieCard
@@ -101,7 +119,7 @@ const SearchPage = () => {
           </div>
         )}
         {/* Empty State */}
-        {!loading && hasSearched && results.length === 0 && (
+        {!loading && !error && hasSearched && results.length === 0 && (
           <p className="text-center mt-10 text-(--text-muted)">
             No results found.
           </p>
