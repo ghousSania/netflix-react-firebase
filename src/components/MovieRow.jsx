@@ -10,7 +10,7 @@ const MovieRow = ({ title, movies, onMovieClick }) => {
 
       <HorizontalScroller>
         {movies?.map((movie) => (
-          <div className="min-w-40">
+          <div className="min-w-40" key={movie.id}>
             <MovieCard
               key={movie.id}
               movie={movie}

@@ -13,6 +13,7 @@ import { FaStar } from "react-icons/fa";
 import Button from "../components/Button";
 import HorizontalScroller from "../components/HorizontalScroller";
 import TrailerModal from "../components/TrailerModal";
+import MovieDetailsSkeleton from "../components/MovieDetailsSkeleton";
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -23,6 +24,7 @@ const MovieDetails = () => {
   const [trailerKey, setTrailerKey] = useState(null);
   const [trailerLoading, setTrailerLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetch trailer key when user clicks "Watch Trailer"
   const handleWatchTrailer = async () => {
@@ -32,7 +34,11 @@ const MovieDetails = () => {
       try {
         setTrailerLoading(true);
         const key = await fetchMovieTrailer(id);
-        setTrailerKey(key);
+        if (!key) {
+          setTrailerKey(null);
+        } else {
+          setTrailerKey(key);
+        }
       } catch {
         setTrailerKey(null);
       } finally {
@@ -40,40 +46,85 @@ const MovieDetails = () => {
       }
     }
   };
+  // Scroll to top when movie ID changes
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, [id]);
   // Fetch movie details and credits on component mount
   useEffect(() => {
+    if (!id || isNaN(Number(id))) {
+      setError("Movie not found");
+      setLoading(false);
+      return;
+    }
+
     const getData = async () => {
       try {
+        setLoading(true);
+        setError(null);
+        setMovie(null);
+        setCast([]);
+
         const [movieData, castData] = await Promise.all([
           fetchMovieDetails(id),
           fetchMovieCredits(id),
         ]);
+
         setMovie(movieData);
-        setCast(castData.cast);
+        setCast(castData?.cast || []);
       } catch (err) {
-        setError(`Failed to load movie details ${err.message}`);
+        if (!navigator.onLine) {
+          setError(
+            "You appear to be offline. Check your connection and try again.",
+          );
+        } else if (err?.message?.includes("404")) {
+          setError("Movie not found.");
+        } else {
+          setError("We couldn't load this movie right now. Please try again.");
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     getData();
   }, [id]);
 
-  if (!movie) return <div className="p-6 text-center">Loading...</div>;
-  if (error) return <div className="p-6 text-center">{error}</div>;
+  if (loading) return <MovieDetailsSkeleton />;
+
+  if (error) return <div className="p-6 text-center text-red-400">{error}</div>;
+
+  if (!movie) return <div className="p-6 text-center">Movie not found.</div>;
 
   return (
-    <Container className="py-6 sm:py-8 px-4 sm:px-6">
+    <Container className="py-10 sm:py-10 px-4 sm:px-6">
       <div className="grid grid-cols-12 gap-6 lg:gap-8">
         {/* LEFT COLUMN */}
         <div className="col-span-12 md:col-span-5 space-y-5 sm:space-y-6">
           {/* Poster */}
-          <img
-            src={`${TMDB_IMAGE_BASE_URL}/w300${
-              movie.backdrop_path || movie.poster_path
-            }`}
-            alt={movie.title}
-            className="w-full rounded-lg shadow-lg object-cover max-h-60 md:max-h-67.5"
-          />
+          <div className="relative w-full aspect-video rounded-lg shadow-lg overflow-hidden bg-gray-900">
+            {movie.backdrop_path || movie.poster_path ? (
+              <img
+                src={`${TMDB_IMAGE_BASE_URL}/w500${
+                  movie.backdrop_path || movie.poster_path
+                }`}
+                alt={movie.title}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center w-full h-60 md:h-72 bg-linear-to-br from-gray-800 to-gray-900 text-gray-400">
+                <p className="text-xs px-3 text-center">Poster not available</p>
+              </div>
+            )}
+          </div>
 
           {/* Info Box */}
           <div className="bg-[#16213e] border border-[#24304f] rounded-xl p-4 sm:p-6 space-y-4 shadow-lg">
@@ -85,31 +136,37 @@ const MovieDetails = () => {
             <div className="grid grid-cols-2 gap-4 sm:gap-6">
               <InfoItem
                 label="Budget"
-                value={`$${movie.budget?.toLocaleString()}`}
+                value={
+                  movie.budget > 0 ? `$${movie.budget.toLocaleString()}` : "N/A"
+                }
               />
               <InfoItem
                 label="Revenue"
-                value={`$${movie.revenue?.toLocaleString()}`}
+                value={
+                  movie.revenue > 0
+                    ? `$${movie.revenue.toLocaleString()}`
+                    : "N/A"
+                }
               />
             </div>
           </div>
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="col-span-12 md:col-span-7 space-y-5 sm:space-y-6 text-(--text-primary)">
+        <div className="col-span-12 md:col-span-7 space-y-2 sm:space-y-4 text-(--text-primary)">
           {/* Year + Rating */}
           <div className="flex flex-wrap items-center gap-3 text-(--text-muted) text-sm sm:text-base">
             <span>{movie.release_date?.slice(0, 4)}</span>
             <div className="flex items-center">
               <FaStar className="text-orange-400 text-sm sm:text-[18px] mr-1" />
-              {movie.vote_average
+              {movie.vote_average != null
                 ? `${movie.vote_average.toFixed(1)} / 10`
                 : "N/A"}
             </div>
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3">
             {movie.title}
           </h1>
 
@@ -121,7 +178,7 @@ const MovieDetails = () => {
           )}
 
           {/* Genres */}
-          <div className="flex flex-wrap gap-2 sm:gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 my-4">
             {movie.genres?.map((genre) => (
               <span
                 key={genre.id}
@@ -142,44 +199,41 @@ const MovieDetails = () => {
           <Button
             className=" px-6 py-3 font-semibold"
             onClick={handleWatchTrailer}
-            loading={trailerLoading}
+            // loading={trailerLoading}
+            // disabled={trailerLoading}
           >
             Watch Trailer
           </Button>
 
           {/* Overview */}
           <div>
-            <h2 className="text-lg sm:text-xl border-l-4 border-(--primary) pl-3 font-semibold mb-2">
+            <h2 className="text-lg sm:text-xl border-l-4 border-(--primary) pl-3 font-semibold my-4 sm:my-6">
               Overview
             </h2>
             <p className="text-sm sm:text-base text-(--text-muted) leading-relaxed">
-              {movie.overview}
+              {movie.overview || "No overview available."}
             </p>
           </div>
 
           {/* Cast */}
-          <div>
-            <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
-              Top Billed Cast
-            </h2>
+          {cast.length > 0 && (
+            <div className="my-4 sm:my-6">
+              <h2 className="text-lg sm:text-xl  font-semibold my-4 sm:my-6">
+                Top Billed Cast
+              </h2>
 
-            <HorizontalScroller>
-              {cast.length === 0 ? (
-                <p className="text-(--text-muted) px-2">No cast available</p>
-              ) : (
-                cast
-                  .slice(0, 8)
-                  .map((actor) => (
-                    <CastCard
-                      key={actor.id}
-                      name={actor.name}
-                      character={actor.character}
-                      profilePath={actor.profile_path}
-                    />
-                  ))
-              )}
-            </HorizontalScroller>
-          </div>
+              <HorizontalScroller>
+                {cast.slice(0, 8).map((actor) => (
+                  <CastCard
+                    key={actor.id}
+                    name={actor.name}
+                    character={actor.character}
+                    profilePath={actor.profile_path}
+                  />
+                ))}
+              </HorizontalScroller>
+            </div>
+          )}
         </div>
       </div>
       {/* Trailer Modal */}
