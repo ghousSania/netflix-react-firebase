@@ -18,7 +18,8 @@ const Button = ({
   const isDisabled = disabled || loading;
   const variants = {
     primary: `
-            px-2 sm:px-4
+            px-3 sm:px-4
+            py-3
             text-sm sm:text-base
             bg-(--primary)
             text-white
@@ -27,7 +28,8 @@ const Button = ({
             `,
     link: `px-1 text-(--link)`,
     light: `
-             px-2 sm:px-4
+             px-3 sm:px-4
+             py-3
             text-sm sm:text-base
             bg-white/20
             text-white
