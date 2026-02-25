@@ -8,7 +8,14 @@ import {
 
 export const getPopularMovies = createAsyncThunk(
   "movies/getPopularMovies",
-  async () => {
+  async (_, { getState }) => {
+    const state = getState();
+    const existing = state.movies.moviesByCategory.popular;
+
+    if (existing && existing.length > 0) {
+      return existing; // no API call
+    }
+
     const data = await fetchPopularMovies();
     return data.results;
   },
@@ -16,7 +23,14 @@ export const getPopularMovies = createAsyncThunk(
 
 export const getUpcomingMovies = createAsyncThunk(
   "movies/getUpcomingMovies",
-  async () => {
+  async (_, { getState }) => {
+    const state = getState();
+    const existing = state.movies.moviesByCategory.upcoming;
+
+    if (existing && existing.length > 0) {
+      return existing; // no API call
+    }
+
     const data = await fetchUpcomingMovies();
     return data.results;
   },
@@ -24,7 +38,14 @@ export const getUpcomingMovies = createAsyncThunk(
 
 export const getTopRatedMovies = createAsyncThunk(
   "movies/getTopRatedMovies",
-  async () => {
+  async (_, { getState }) => {
+    const state = getState();
+    const existing = state.movies.moviesByCategory.topRated;
+
+    if (existing && existing.length > 0) {
+      return existing; // no API call
+    }
+
     const data = await fetchTopRatedMovies();
     return data.results;
   },
@@ -32,7 +53,14 @@ export const getTopRatedMovies = createAsyncThunk(
 
 export const getNowPlayingMovies = createAsyncThunk(
   "movies/getNowPlayingMovies",
-  async () => {
+  async (_, { getState }) => {
+    const state = getState();
+    const existing = state.movies.moviesByCategory.nowPlaying;
+
+    if (existing && existing.length > 0) {
+      return existing; // no API call
+    }
+
     const data = await fetchNowPlayingMovies();
     return data.results;
   },

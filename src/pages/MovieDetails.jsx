@@ -14,7 +14,7 @@ import Button from "../components/Button";
 import HorizontalScroller from "../components/HorizontalScroller";
 import TrailerModal from "../components/TrailerModal";
 import MovieDetailsSkeleton from "../components/MovieDetailsSkeleton";
-
+import usePageTitle from "../utils/usePageTitle";
 const MovieDetails = () => {
   const { id } = useParams();
   // State variables
@@ -26,6 +26,7 @@ const MovieDetails = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  usePageTitle(`${movie?.title || "Movie Details"} - Nova Movies`);
   // Fetch trailer key when user clicks "Watch Trailer"
   const handleWatchTrailer = async () => {
     setShowTrailer(true);
@@ -77,14 +78,10 @@ const MovieDetails = () => {
         setMovie(movieData);
         setCast(castData?.cast || []);
       } catch (err) {
-        if (!navigator.onLine) {
-          setError(
-            "You appear to be offline. Check your connection and try again.",
-          );
-        } else if (err?.message?.includes("404")) {
+        if (err?.message?.includes("404")) {
           setError("Movie not found.");
         } else {
-          setError("We couldn't load this movie right now. Please try again.");
+          setError("We couldn't load this movie right now.");
         }
       } finally {
         setLoading(false);
@@ -96,7 +93,18 @@ const MovieDetails = () => {
 
   if (loading) return <MovieDetailsSkeleton />;
 
-  if (error) return <div className="p-6 text-center text-red-400">{error}</div>;
+  if (error) {
+    return (
+      <Container className="py-20 text-center">
+        <div className="bg-[#16213e] border border-[#24304f] p-8 rounded-xl">
+          <h2 className="text-xl font-semibold mb-3 text-white">
+            Something went wrong
+          </h2>
+          <p className="text-red-400">{error}</p>
+        </div>
+      </Container>
+    );
+  }
 
   if (!movie) return <div className="p-6 text-center">Movie not found.</div>;
 

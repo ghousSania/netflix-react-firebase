@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import SearchSuggestions from "../components/SearchSuggestions";
 import { useMovieSearch } from "../utils/useMovieSearch";
 import MovieCardSkeleton from "../components/MovieCardSkeleton";
-
+import usePageTitle from "../utils/usePageTitle";
 const SearchPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,7 +21,7 @@ const SearchPage = () => {
   const { results, loading, error } = useMovieSearch(query, searchTrigger);
 
   const hasSearched = Boolean(query);
-
+  usePageTitle(`Search - Nova Movies`);
   /* Keep input field in sync with URL */
   useEffect(() => {
     setInputValue(query);

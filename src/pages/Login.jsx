@@ -12,6 +12,7 @@ import Button from "../components/Button";
 import FieldError from "../components/auth/FieldError";
 import FormError from "../components/auth/FormError";
 import { validateAuthForm } from "../utils/validateAuthForm";
+import usePageTitle from "../utils/usePageTitle";
 const Login = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, authError } = useSelector((state) => state.auth);
@@ -20,6 +21,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  usePageTitle("Login - Nova Movies");
   useEffect(() => {
     dispatch(clearAuthError());
   }, [dispatch]);

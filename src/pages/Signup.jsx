@@ -12,11 +12,13 @@ import Button from "../components/Button";
 import FieldError from "../components/auth/FieldError";
 import FormError from "../components/auth/FormError";
 import { validateAuthForm } from "../utils/validateAuthForm";
+import usePageTitle from "../utils/usePageTitle";
+
 const Signup = () => {
   const dispatch = useDispatch();
 
   const { isAuthenticated, authError } = useSelector((state) => state.auth);
-
+  usePageTitle("Signup - Nova Movies");
   useEffect(() => {
     dispatch(clearAuthError());
   }, [dispatch]);

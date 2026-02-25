@@ -6,7 +6,7 @@ const MovieCardSkeleton = () => {
 
       {/* Title */}
       <div className="p-2 space-y-2">
-        <div className="h-3 bg-gray-700/40 rounded w-3/4 mx-auto" />
+        <div className="h-3 bg-gray-700/40 rounded w-full mx-auto" />
       </div>
     </div>
   );

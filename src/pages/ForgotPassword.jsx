@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authFail, clearAuthError } from "../store/authSlice";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
-
+import usePageTitle from "../utils/usePageTitle";
 const ForgotPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,6 +22,8 @@ const ForgotPassword = () => {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  usePageTitle("Forgot Password - Nova Movies");
   useEffect(() => {
     dispatch(clearAuthError());
   }, [dispatch]);

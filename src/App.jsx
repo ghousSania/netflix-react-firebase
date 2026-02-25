@@ -13,10 +13,11 @@ import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import MainLayout from "./components/MainLayout";
 import SearchPage from "./pages/SearchPage";
-
+import useOnlineStatus from "./utils/useOnlineStatus";
+import OfflineBanner from "./components/OfflineBanner";
 function App() {
   const dispatch = useDispatch();
-
+  const isOnline = useOnlineStatus();
   useEffect(() => {
     // Subscribe to Firebase auth state changes
     const unSubscribe = onAuthStateChanged(auth, (user) => {
@@ -36,26 +37,30 @@ function App() {
   }, [dispatch]);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* public routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+    <>
+      <BrowserRouter>
+        {!isOnline && <OfflineBanner />}
 
-        {/* protected routes  */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/movie/:id" element={<MovieDetails />} />
-            <Route path="/search" element={<SearchPage />} />
+        <Routes>
+          {/* public routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* protected routes  */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/movie/:id" element={<MovieDetails />} />
+              <Route path="/search" element={<SearchPage />} />
+            </Route>
           </Route>
-        </Route>
 
-        {/* Not found route */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Not found route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
