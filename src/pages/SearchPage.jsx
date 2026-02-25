@@ -6,6 +6,9 @@ import SearchSuggestions from "../components/SearchSuggestions";
 import { useMovieSearch } from "../utils/useMovieSearch";
 import MovieCardSkeleton from "../components/MovieCardSkeleton";
 import usePageTitle from "../utils/usePageTitle";
+import { MdWifiOff } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
+import EmptyState from "../components/EmptyState";
 const SearchPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,6 +25,10 @@ const SearchPage = () => {
 
   const hasSearched = Boolean(query);
   usePageTitle(`Search - Nova Movies`);
+  // Scroll to top when movie ID changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [query]);
   /* Keep input field in sync with URL */
   useEffect(() => {
     setInputValue(query);
@@ -100,12 +107,13 @@ const SearchPage = () => {
           </div>
         )}
         {!loading && error && (
-          <p className="text-red-400 text-center mt-8 ">
-            Something went wrong. Please check your internet connection and try
-            again.
-          </p>
+          <EmptyState
+            icon={<MdWifiOff size={80} />}
+            title="You're Offline"
+            description="You are currently offline. Please check your internet connection and try again."
+            className="mt-0"
+          />
         )}
-
         {/* Results Grid */}
         {!loading && !error && results.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mt-3">
@@ -120,9 +128,14 @@ const SearchPage = () => {
         )}
         {/* Empty State */}
         {!loading && !error && hasSearched && results.length === 0 && (
-          <p className="text-center mt-10 text-(--text-muted)">
-            No results found.
-          </p>
+          <Container className="py-1">
+            <EmptyState
+              icon={<FaSearch size={60} />}
+              title="No Results Found"
+              description="We couldn't find anything matching your search. Try different keywords."
+              className="mt-0"
+            />
+          </Container>
         )}
       </div>
     </Container>

@@ -9,12 +9,15 @@ import { TMDB_IMAGE_BASE_URL } from "../utils/constants";
 import Container from "../components/container";
 import InfoItem from "../components/InfoItem";
 import CastCard from "../components/CastCard";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaFilm, FaWifi } from "react-icons/fa";
 import Button from "../components/Button";
 import HorizontalScroller from "../components/HorizontalScroller";
 import TrailerModal from "../components/TrailerModal";
 import MovieDetailsSkeleton from "../components/MovieDetailsSkeleton";
 import usePageTitle from "../utils/usePageTitle";
+import EmptyState from "../components/EmptyState";
+import useOnlineStatus from "../utils/useOnlineStatus";
+import { MdWifiOff } from "react-icons/md";
 const MovieDetails = () => {
   const { id } = useParams();
   // State variables
@@ -25,7 +28,7 @@ const MovieDetails = () => {
   const [trailerLoading, setTrailerLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const isOnline = useOnlineStatus();
   usePageTitle(`${movie?.title || "Movie Details"} - Nova Movies`);
   // Fetch trailer key when user clicks "Watch Trailer"
   const handleWatchTrailer = async () => {
@@ -89,24 +92,44 @@ const MovieDetails = () => {
     };
 
     getData();
-  }, [id]);
+  }, [id, isOnline]);
 
   if (loading) return <MovieDetailsSkeleton />;
-
-  if (error) {
+  if (!isOnline && !movie) {
     return (
-      <Container className="py-20 text-center">
-        <div className="bg-[#16213e] border border-[#24304f] p-8 rounded-xl">
-          <h2 className="text-xl font-semibold mb-3 text-white">
-            Something went wrong
-          </h2>
-          <p className="text-red-400">{error}</p>
-        </div>
+      <Container className="py-20">
+        <EmptyState
+          icon={<MdWifiOff size={90} />}
+          title="Offline"
+          description="You are currently offline. Please check your internet connection and try again."
+        />
       </Container>
     );
   }
 
-  if (!movie) return <div className="p-6 text-center">Movie not found.</div>;
+  if (error) {
+    return (
+      <Container className="py-20">
+        <EmptyState
+          icon={<FaFilm size={90} />}
+          title="Movie Not Found"
+          description="We couldn't find the movie you are looking for. It might have been removed or the URL is incorrect."
+        />
+      </Container>
+    );
+  }
+
+  if (!movie) {
+    return (
+      <Container className="py-20">
+        <EmptyState
+          icon={<FaFilm size={90} />}
+          title="Movie Not Found"
+          description="This movie does not exist in our database."
+        />
+      </Container>
+    );
+  }
 
   return (
     <Container className="py-10 sm:py-10 px-4 sm:px-6">

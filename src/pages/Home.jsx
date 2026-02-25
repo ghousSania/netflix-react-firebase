@@ -52,6 +52,7 @@ const Home = () => {
                 <MovieRowSkeleton key={cat.key} />
               ) : (
                 <MovieRow
+                  key={cat.key}
                   title={cat.label}
                   movies={moviesByCategory?.[cat.key] || []}
                   onMovieClick={handleMovieClick}
