@@ -13,7 +13,7 @@ import FieldError from "../components/auth/FieldError";
 import FormError from "../components/auth/FormError";
 import { validateAuthForm } from "../utils/validateAuthForm";
 import usePageTitle from "../utils/usePageTitle";
-
+import Header from "../components/Header";
 const Signup = () => {
   const dispatch = useDispatch();
 
@@ -71,95 +71,98 @@ const Signup = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <AuthLayout
-      title="Create an account"
-      subTitle="Create an account and start watching today."
-    >
-      <AuthForm onSubmit={handleSignup}>
-        {/* Name */}
-        <div className="mb-4">
-          <AuthInput
-            label="Full Name"
-            type="text"
-            id="name"
-            name="name"
-            value={name}
-            required={true}
-            placeholder="Enter your name"
-            onChange={(e) => {
-              setName(e.target.value);
-              clearFieldError("fullname");
-            }}
-            className="capitalize"
-          />
-          {errors.fullname && <FieldError message={errors.fullname} />}
-        </div>
+    <>
+      <Header variant="auth" />
+      <AuthLayout
+        title="Create an account"
+        subTitle="Create an account and start watching today."
+      >
+        <AuthForm onSubmit={handleSignup}>
+          {/* Name */}
+          <div className="mb-4">
+            <AuthInput
+              label="Full Name"
+              type="text"
+              id="name"
+              name="name"
+              value={name}
+              required={true}
+              placeholder="Enter your name"
+              onChange={(e) => {
+                setName(e.target.value);
+                clearFieldError("fullname");
+              }}
+              className="capitalize"
+            />
+            {errors.fullname && <FieldError message={errors.fullname} />}
+          </div>
 
-        {/* Email */}
-        <div className="mb-4">
-          <AuthInput
-            label="Email Address"
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            required={true}
-            placeholder="Enter your email"
-            onChange={(e) => {
-              (setEmail(e.target.value), clearFieldError("email"));
-            }}
-          />
-          {errors.email && <FieldError message={errors.email} />}
-        </div>
+          {/* Email */}
+          <div className="mb-4">
+            <AuthInput
+              label="Email Address"
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              required={true}
+              placeholder="Enter your email"
+              onChange={(e) => {
+                (setEmail(e.target.value), clearFieldError("email"));
+              }}
+            />
+            {errors.email && <FieldError message={errors.email} />}
+          </div>
 
-        {/* Password */}
-        <div className="mb-4">
-          <AuthInput
-            label="Password"
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            required={true}
-            placeholder="Enter password"
-            onChange={(e) => {
-              (setPassword(e.target.value), clearFieldError("password"));
-            }}
-          />
-          {errors.password && <FieldError message={errors.password} />}
-        </div>
+          {/* Password */}
+          <div className="mb-4">
+            <AuthInput
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              required={true}
+              placeholder="Enter password"
+              onChange={(e) => {
+                (setPassword(e.target.value), clearFieldError("password"));
+              }}
+            />
+            {errors.password && <FieldError message={errors.password} />}
+          </div>
 
-        {/* Confirm Password */}
-        <div className="mb-4">
-          <AuthInput
-            label="Confirm Password"
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={confirmPassword}
-            required={true}
-            placeholder="Confirm password"
-            onChange={(e) => {
-              (setConfirmPassword(e.target.value),
-                clearFieldError("confirmPassword"));
-            }}
-          />
-          {errors.confirmPassword && (
-            <FieldError message={errors.confirmPassword} />
-          )}
-        </div>
-        {authError && <FormError message={getAuthErrorMessage(authError)} />}
-        <Button type="submit" fullWidth loading={submitting} className="mt-2">
-          Signup
-        </Button>
-      </AuthForm>
-      <p className="text-(--text-muted) text-center mt-4">
-        Already have an account?{" "}
-        <Link to="/login" className="text-(--text-primary)">
-          Log in
-        </Link>
-      </p>
-    </AuthLayout>
+          {/* Confirm Password */}
+          <div className="mb-4">
+            <AuthInput
+              label="Confirm Password"
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={confirmPassword}
+              required={true}
+              placeholder="Confirm password"
+              onChange={(e) => {
+                (setConfirmPassword(e.target.value),
+                  clearFieldError("confirmPassword"));
+              }}
+            />
+            {errors.confirmPassword && (
+              <FieldError message={errors.confirmPassword} />
+            )}
+          </div>
+          {authError && <FormError message={getAuthErrorMessage(authError)} />}
+          <Button type="submit" fullWidth loading={submitting} className="mt-2">
+            Signup
+          </Button>
+        </AuthForm>
+        <p className="text-(--text-muted) text-center mt-4">
+          Already have an account?{" "}
+          <Link to="/login" className="text-(--text-primary)">
+            Log in
+          </Link>
+        </p>
+      </AuthLayout>
+    </>
   );
 };
 

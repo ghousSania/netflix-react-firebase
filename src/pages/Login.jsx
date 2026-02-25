@@ -13,6 +13,7 @@ import FieldError from "../components/auth/FieldError";
 import FormError from "../components/auth/FormError";
 import { validateAuthForm } from "../utils/validateAuthForm";
 import usePageTitle from "../utils/usePageTitle";
+import Header from "../components/Header";
 const Login = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, authError } = useSelector((state) => state.auth);
@@ -60,63 +61,66 @@ const Login = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <AuthLayout
-      title="Welcome Back"
-      subTitle="Enter your email and password to sign in."
-    >
-      <AuthForm onSubmit={handleLogin}>
-        {/* Email */}
-        <div className="mb-4">
-          <AuthInput
-            label="Email Address"
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            required={true}
-            placeholder="Enter email address"
-            onChange={(e) => {
-              (setEmail(e.target.value), clearFieldError("email"));
-            }}
-          />
-          {errors.email && <FieldError message={errors.email} />}
-        </div>
+    <>
+      <Header variant="auth" />
+      <AuthLayout
+        title="Welcome Back"
+        subTitle="Enter your email and password to sign in."
+      >
+        <AuthForm onSubmit={handleLogin}>
+          {/* Email */}
+          <div className="mb-4">
+            <AuthInput
+              label="Email Address"
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              required={true}
+              placeholder="Enter email address"
+              onChange={(e) => {
+                (setEmail(e.target.value), clearFieldError("email"));
+              }}
+            />
+            {errors.email && <FieldError message={errors.email} />}
+          </div>
 
-        {/* Password */}
-        <div className="mb-4">
-          <AuthInput
-            label="Password"
-            rightElement={
-              <Link to="/forgot-password" className="text-sm text-(--link)">
-                Forgot password?
-              </Link>
-            }
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            required={true}
-            placeholder="Enter password"
-            onChange={(e) => {
-              setPassword(e.target.value);
-              clearFieldError("password");
-            }}
-          />
-          {errors.password && <FieldError message={errors.password} />}
-        </div>
+          {/* Password */}
+          <div className="mb-4">
+            <AuthInput
+              label="Password"
+              rightElement={
+                <Link to="/forgot-password" className="text-sm text-(--link)">
+                  Forgot password?
+                </Link>
+              }
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              required={true}
+              placeholder="Enter password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                clearFieldError("password");
+              }}
+            />
+            {errors.password && <FieldError message={errors.password} />}
+          </div>
 
-        {authError && <FormError message={getAuthErrorMessage(authError)} />}
-        <Button type="submit" fullWidth loading={submitting} className="mt-2">
-          Login
-        </Button>
-      </AuthForm>
-      <p className="text-(--text-muted) text-center mt-4">
-        New Here?{" "}
-        <Link to="/signup" className="text-(--text-primary)">
-          Create an account
-        </Link>
-      </p>
-    </AuthLayout>
+          {authError && <FormError message={getAuthErrorMessage(authError)} />}
+          <Button type="submit" fullWidth loading={submitting} className="mt-2">
+            Login
+          </Button>
+        </AuthForm>
+        <p className="text-(--text-muted) text-center mt-4">
+          New Here?{" "}
+          <Link to="/signup" className="text-(--text-primary)">
+            Create an account
+          </Link>
+        </p>
+      </AuthLayout>
+    </>
   );
 };
 

@@ -7,7 +7,7 @@ import { clearUser } from "../store/authSlice";
 import { signOut } from "firebase/auth";
 import { auth } from "../services/firebase";
 
-const Header = () => {
+const Header = ({ variant = "app" }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -69,33 +69,34 @@ const Header = () => {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex items-center gap-5 relative" ref={dropdownRef}>
-            {/* SEARCH */}
-            <FiSearch
-              size={22}
-              className="text-white cursor-pointer hover:text-[#2a6aee] transition"
-              onClick={() => navigate("/search")}
-            />
+          {variant === "app" && (
+            <div className="flex items-center gap-5 relative" ref={dropdownRef}>
+              {/* SEARCH */}
+              <FiSearch
+                size={22}
+                className="text-white cursor-pointer hover:text-[#2a6aee] transition"
+                onClick={() => navigate("/search")}
+              />
 
-            <div
-              onClick={() => setOpen((prev) => !prev)}
-              className="w-9 h-9 rounded-md bg-[#2a6aee] flex items-center justify-center text-white font-semibold cursor-pointer hover:opacity-90 transition"
-            >
-              {initials}
-            </div>
-
-            {/* DROPDOWN */}
-            {open && (
-              <div className="absolute right-0 top-12 w-32 bg-[#1b2545] rounded-md shadow-lg overflow-hidden">
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#2a6aee] transition"
-                >
-                  Logout
-                </button>
+              <div
+                onClick={() => setOpen((prev) => !prev)}
+                className="w-9 h-9 rounded-md bg-[#2a6aee] flex items-center justify-center text-white font-semibold cursor-pointer hover:opacity-90 transition"
+              >
+                {initials}
               </div>
-            )}
-          </div>
+
+              {open && (
+                <div className="absolute right-0 top-12 w-32 bg-[#1b2545] rounded-md shadow-lg overflow-hidden">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#2a6aee] transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </Container>
     </header>

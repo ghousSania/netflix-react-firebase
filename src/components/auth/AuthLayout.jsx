@@ -1,6 +1,6 @@
 const AuthLayout = ({ title, subTitle, children }) => {
   return (
-    <div className="flex justify-center items-center bg-(--bg) min-h-screen py-15">
+    <div className="flex justify-center items-center bg-(--bg) min-h-screen py-25 px-5">
       <div className=" w-full max-w-95 ">
         <h2 className="text-center text-(--text-primary) font-bold text-2xl">
           {title}

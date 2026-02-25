@@ -51,7 +51,7 @@ const SearchPage = () => {
   };
   return (
     <Container>
-      <div className="min-h-screen px-4 py-10 mx-auto text-(--text-primary)">
+      <div className="min-h-screen px-0 py-10 mx-auto text-(--text-primary)">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8">
           What's your story today?
         </h1>

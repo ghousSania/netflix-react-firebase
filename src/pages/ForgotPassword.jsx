@@ -13,6 +13,7 @@ import { authFail, clearAuthError } from "../store/authSlice";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import usePageTitle from "../utils/usePageTitle";
+import Header from "../components/Header";
 const ForgotPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -50,32 +51,37 @@ const ForgotPassword = () => {
     }
   };
   return !success ? (
-    <AuthLayout
-      title="Reset Password"
-      subTitle="Enter your email to receive a reset link."
-    >
-      <AuthForm onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <AuthInput
-            label="Email address"
-            type="email"
-            id="email"
-            value={email}
-            required={true}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErrors({});
-            }}
-          />
-          {errors.email && <FieldError message={errors.email} />}
-          {authError && <FormError message={getAuthErrorMessage(authError)} />}
-        </div>
+    <>
+      <Header variant="auth" />
+      <AuthLayout
+        title="Reset Password"
+        subTitle="Enter your email to receive a reset link."
+      >
+        <AuthForm onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <AuthInput
+              label="Email address"
+              type="email"
+              id="email"
+              value={email}
+              required={true}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErrors({});
+              }}
+            />
+            {errors.email && <FieldError message={errors.email} />}
+            {authError && (
+              <FormError message={getAuthErrorMessage(authError)} />
+            )}
+          </div>
 
-        <Button type="submit" fullWidth loading={submitting} className="mt-2">
-          Send Reset Link
-        </Button>
-      </AuthForm>
-    </AuthLayout>
+          <Button type="submit" fullWidth loading={submitting} className="mt-2">
+            Send Reset Link
+          </Button>
+        </AuthForm>
+      </AuthLayout>
+    </>
   ) : (
     // success state
     <AuthLayout title="Check your inbox">

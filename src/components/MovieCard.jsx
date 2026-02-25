@@ -11,7 +11,7 @@ const MovieCard = ({ movie, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="w-full mx-auto mt-5 snap-item shrink-0 cursor-pointer hover:scale-105 transition"
+      className="w-full mx-auto mt-3 snap-item shrink-0 cursor-pointer hover:scale-105 transition"
     >
       {/* IMAGE */}
       <div className="relative w-full aspect-2/3 rounded-lg overflow-hidden bg-[#0e172a]">
